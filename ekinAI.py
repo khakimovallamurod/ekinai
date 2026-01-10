@@ -441,7 +441,7 @@ with st.spinner("Tizim ishga tushirilmoqda..."):
     df, le_dict, le_crop, crop_averages = load_and_preprocess()
     rf, feature_names, test_acc, cv_acc, train_acc, report, feature_importances, train_sizes, train_mean, train_std, valid_mean, valid_std = train_model(df)
 # Center inputs in two columns instead of sidebar
-st.subheader("Tuproq ma'lumotlarini kiriting")
+st.subheader("Tuproq xususiyatlarini kiriting")
 # Tooltips for each property
 tooltips = {
     "Qatlam (sm)": "Tuproq namunasi qatlam chuqurligi (sm)",
@@ -730,6 +730,7 @@ else:
     st.markdown(f'<div class="copyright"> <a href="https://www.samdu.uz/uz" class="samdu"> Samarqand davlat universiteti  </a> <a href="http://ai-lab.sampc.uz/" class="lab"> "Sun\'iy intellekt labaratoriyasi" </a> <span class="ishlab"> tomonidan ishlab chiqilgan. © 2025 </span> <span class="ekin2">Ekin</span> <span class="ai2"> AI</span>.</div>', unsafe_allow_html=True)
 
 st.markdown(f'<div class="author">  Muallif: <a href="https://t.me/axatov_a" class="lab"> Axatov Abror </a> <span class="ekin2">Tel: </span> <span class="ai2"> +998(99)-590-52-65 </span></div>', unsafe_allow_html=True)
+
 
 
 
