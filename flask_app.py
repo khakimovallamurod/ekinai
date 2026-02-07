@@ -1,41 +1,37 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import numpy as np
-from utils import load_and_preprocess, train_model
 import base64
 from io import BytesIO
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import os
+import joblib
 
 app = Flask(__name__)
-DATA_URL = "data/ekin7.csv"
-model_data = {}
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
 
-def init_model():
-    """Model va ma'lumotlarni yuklash"""
-    global model_data
-    df, le_dict, le_crop, crop_averages = load_and_preprocess(DATA_URL)
-    rf, feature_names, metrics, feature_importances = train_model(df)
-    
-    model_data = {
-        'model': rf,
-        'df': df,
-        'le_dict': le_dict,
-        'le_crop': le_crop,
-        'crop_averages': crop_averages,
-        'feature_names': feature_names,
-        'metrics': metrics,
-        'feature_importances': feature_importances
-    }
+model_data = {
+    'model': joblib.load(os.path.join(MODEL_DIR, "model.pkl")),
+    'le_dict': joblib.load(os.path.join(MODEL_DIR, "le_dict.pkl")),
+    'le_crop': joblib.load(os.path.join(MODEL_DIR, "le_crop.pkl")),
+    'crop_averages': joblib.load(os.path.join(MODEL_DIR, "crop_averages.pkl")),
+    'feature_names': joblib.load(os.path.join(MODEL_DIR, "feature_names.pkl")),
+    'metrics': joblib.load(os.path.join(MODEL_DIR, "metrics.pkl")),
+    'feature_importances': joblib.load(os.path.join(MODEL_DIR, "feature_importances.pkl")),
+}
+
 
 @app.route('/')
 def index():
-    """Asosiy sahifa"""
+    le_dict = model_data.get('le_dict', {})
     mech_classes = []
-    if 'Mexanik tarkib' in model_data['le_dict']:
-        mech_classes = model_data['le_dict']['Mexanik tarkib'].classes_.tolist()
-    
+
+    if 'Mexanik tarkib' in le_dict:
+        mech_classes = le_dict['Mexanik tarkib'].classes_.tolist()
+
     return render_template('index.html', mech_classes=mech_classes)
 
 @app.route('/predict', methods=['POST'])
@@ -262,5 +258,4 @@ def get_stats():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 if __name__ == '__main__':
-    init_model()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8800)
