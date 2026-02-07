@@ -1,0 +1,187 @@
+<!-- templates/index.html - Yangilangan versiya -->
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekin AI - Tuproq tahlili</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/abroraxatov1/ekinai/refs/heads/main/logos.jpg" alt="Logo" width="200">
+        </div>
+        
+        <div class="title">
+            <span class="ekin">Tuproq tarkibi asosida ekinlar hosildorligini aniqlashning</span>
+            <span class="ai">sun'iy intellekt</span>
+            <span class="ekin">tizimi</span>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button id="statsBtn" class="btn-stats">Statistika</button>
+        </div>
+
+        <h2>Tuproq xususiyatlarini kiriting</h2>
+
+        <form id="predictionForm">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>Qatlam (sm)</label>
+                    <select name="layer" id="layer">
+                        <option value="0-20">0-20</option>
+                        <option value="20-40">20-40</option>
+                        <option value="40-60">40-60</option>
+                        <option value="60-90">60-90</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Mexanik tarkib</label>
+                    <select name="mech_comp" id="mech_comp">
+                        {% for mech in mech_classes %}
+                        <option value="{{ mech }}">{{ mech }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>DNS (%)</label>
+                    <input type="range" name="dns" min="1" max="50" value="25" step="0.1">
+                    <span class="value">25</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Tuproq zichligi (g/cm³)</label>
+                    <input type="range" name="density" min="1" max="3" value="1.4" step="0.01">
+                    <span class="value">1.4</span>
+                </div>
+
+                <div class="input-group">
+                    <label>pH</label>
+                    <input type="range" name="ph" min="4" max="9" value="6.5" step="0.1">
+                    <span class="value">6.5</span>
+                </div>
+
+                <div class="input-group">
+                    <label>EC (mS/cm)</label>
+                    <input type="range" name="ec" min="0.1" max="5" value="1" step="0.1">
+                    <span class="value">1</span>
+                </div>
+
+                <div class="input-group">
+                    <label>N (mg/kg)</label>
+                    <input type="range" name="nitrogen" min="5" max="200" value="100" step="1">
+                    <span class="value">100</span>
+                </div>
+
+                <div class="input-group">
+                    <label>P (mg/kg)</label>
+                    <input type="range" name="phosphorus" min="5" max="100" value="50" step="1">
+                    <span class="value">50</span>
+                </div>
+
+                <div class="input-group">
+                    <label>K (mg/kg)</label>
+                    <input type="range" name="potassium" min="50" max="500" value="250" step="1">
+                    <span class="value">250</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Gumus (%)</label>
+                    <input type="range" name="humus" min="0.5" max="5" value="2" step="0.1">
+                    <span class="value">2</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Mg (mg/kg)</label>
+                    <input type="range" name="mg" min="20" max="500" value="150" step="1">
+                    <span class="value">150</span>
+                </div>
+
+                <div class="input-group">
+                    <label>S (mg/kg)</label>
+                    <input type="range" name="s" min="5" max="500" value="50" step="1">
+                    <span class="value">50</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Zn (mg/kg)</label>
+                    <input type="range" name="zn" min="0.5" max="10" value="5" step="0.1">
+                    <span class="value">5</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Mn (mg/kg)</label>
+                    <input type="range" name="mn" min="1" max="60" value="25" step="1">
+                    <span class="value">25</span>
+                </div>
+
+                <div class="input-group">
+                    <label>B (mg/kg)</label>
+                    <input type="range" name="b" min="0.1" max="5" value="2" step="0.1">
+                    <span class="value">2</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Fe (mg/kg)</label>
+                    <input type="range" name="fe" min="10" max="400" value="100" step="1">
+                    <span class="value">100</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Cu (mg/kg)</label>
+                    <input type="range" name="cu" min="0.5" max="10" value="5" step="0.1">
+                    <span class="value">5</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Mikroorganizmlar (CFU/g)</label>
+                    <input type="range" name="microorg" min="100000" max="1000000000" value="100000000" step="1000000">
+                    <span class="value">100000000</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-predict">Kiritish</button>
+        </form>
+
+        <div id="results" class="results" style="display:none;">
+            <div id="bestCrop" class="best-crop"></div>
+            
+            <div id="graphContainer"></div>
+            
+            <div id="probTable"></div>
+            
+            <div id="cropImage" style="text-align: center; margin: 30px 0;"></div>
+            
+            <div id="comparisonContainer"></div>
+            
+            <button id="downloadBtn" class="btn-download">Natijani CSV formatida yuklash</button>
+        </div>
+
+        <!-- Stats Modal -->
+        <div id="statsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="statsContent"></div>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <img src="https://www.samdu.uz/new/images/SamDU%20logo%20full%201.png" alt="SamDU">
+            <a href="https://www.samdu.uz/uz" class="samdu">Samarqand davlat universiteti</a>
+            <a href="http://ai-lab.sampc.uz/" class="lab">"Sun'iy intellekt labaratoriyasi"</a>
+            <span>tomonidan ishlab chiqilgan. © 2026</span>
+            <span class="ekin2">Ekin</span><span class="ai2">AI</span>
+        </div>
+
+        <div class="author">
+            Muallif: <a href="https://t.me/axatov_a" class="lab">Axatov Abror</a>
+            <span class="ekin2">Tel:</span> <span class="ai2">+998(99)-590-52-65</span>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

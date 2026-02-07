@@ -1,8 +1,6 @@
-streamlit==1.51.0
-pandas==2.3.3
-numpy==2.3.4
-scikit-learn==1.5.2
-matplotlib
-plotly
-imbalanced-learn
-openpyxl
+Flask==3.0.0
+pandas==2.2.0
+numpy==1.26.4
+scikit-learn==1.4.0
+imbalanced-learn==0.12.0
+matplotlib==3.8.2
